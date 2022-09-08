@@ -1,4 +1,5 @@
-﻿using DataAccess.Abstract;
+﻿using Core.Extention;
+using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Data_Access.Concrete
 
         public void Delete(int id)
         {
+
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "delete from Category where Id=@id";
@@ -40,14 +42,39 @@ namespace Data_Access.Concrete
         }
         public Category Get(int id)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "select * from Category where Id=@id";
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@id", id);
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return ReadCategory(reader);
+            return null;
         }
 
         public List<Category> GetAll()
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "select  * from Category";
+            using SqlCommand command = new SqlCommand(query, connection);
+            using SqlDataReader reader = command.ExecuteReader();
+            List<Category> categories = new List<Category>();
+            while (reader.Read())
+                categories.Add(ReadCategory(reader));
+            return categories;
         }
 
+        private Category ReadCategory (SqlDataReader reader)
+        {
+
+            return new Category
+            {
+                Id=reader.Get<int>("Id"),
+                Name=reader.Get<string>("Name")
+            };
+        }
        
     }
 }
