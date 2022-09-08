@@ -3,9 +3,8 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
-namespace Data_Access.Concrete
+namespace DataAccess.Concrete
 {
     public class SqlCountryRepository : BaseRepository, ICountryRepository
     {

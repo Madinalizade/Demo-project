@@ -10,7 +10,7 @@ namespace Core.Extention
         public static T Get <T>(this SqlDataReader reader,string column)
         {
             T value = default;
-            if (reader != null & value != null)
+            if (reader != null )
                 value = (T)reader[column];
             return value;
         }

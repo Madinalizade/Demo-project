@@ -1,12 +1,10 @@
 ﻿using Core.Extention;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
-namespace Data_Access.Concrete
+namespace DataAccess.Concrete
 {
     public class SqlCategoryRepository : BaseRepository, ICategoryRepository
     {
@@ -14,7 +12,7 @@ namespace Data_Access.Concrete
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
-            string query = "insert into Category(Name) value(@name)";
+            string query = "insert into Category(Name) values(@name)";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.ExecuteNonQuery();
