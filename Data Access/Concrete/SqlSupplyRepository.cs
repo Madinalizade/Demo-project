@@ -1,4 +1,5 @@
-﻿using Data_Access.Abstract;
+﻿using Core.Extention;
+using Data_Access.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -50,14 +51,41 @@ namespace DataAccess.Concrete
         }
         public Supply Get(int id)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "select*from Suplies Where Id=@id";
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@id", id);
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return ReadSupply(reader);
+            return null;
         }
 
         public List<Supply> GetAll()
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select*from Supplies Where Id=@id";
+            using SqlCommand command = new SqlCommand(query, connection);
+            List<Supply> list = new List<Supply>();
+            using SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                list.Add(ReadSupply(reader));
+            return list;
         }
 
-        
+        private Supply ReadSupply(SqlDataReader reader)
+        {
+            return new Supply
+            {
+                Id = reader.Get<int>("Id"),
+                Name=reader.Get<string>("Name"),
+                ContactName=reader.Get<string>("ContactName"),
+                 CityId=reader.Get<int>("CityId"),
+                 Address=reader.Get<string>("Address"),
+                 Phone=reader.Get<string>("Phone")
+            };
+        }
     }
 }

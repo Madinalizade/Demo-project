@@ -1,4 +1,5 @@
-﻿using DataAccess.Abstract;
+﻿using Core.Extention;
+using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -37,12 +38,28 @@ namespace DataAccess.Concrete
 
         public Product Get(int id)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select*from Product Where Id=@id";
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@id", id);
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return ReadProduct(reader);
+            return null;
         }
 
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select*from Product";
+            using SqlCommand command = new SqlCommand(query, connection);
+            List<Product> list = new List<Product>();
+            using SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                list.Add(ReadProduct(reader));
+            return list;
         }
 
         public void Update(Product entity)
@@ -50,7 +67,7 @@ namespace DataAccess.Concrete
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "update Products set Name=@name,UnitInStock=@unitInStock,UnitPrice=@unitPrice,UnitOnOrder=@unitOnOrder,CategoryId=@categoryId,SuppliesId=@suppliesId Where Id=@id";
-          
+
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@unitInStock", entity.UnitInStock);
@@ -61,5 +78,20 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
+
+        private Product ReadProduct(SqlDataReader reader)
+        {
+            return new Product
+            {
+                Id = reader.Get<int>("Id"),
+                CategoryId = reader.Get<int>("Id"),
+                Name=reader.Get<string>("Name"),
+                SuppliesId=reader.Get<int>("SuppliesId"),
+                UnitInStock=reader.Get<int>("UnitInStock"),
+                UnitOnOrder=reader.Get<int>("UnitOnOrder"),
+                UnitPrice =reader.Get<decimal>("unitPrice")
+            };
+        }
+        
     }
 }
