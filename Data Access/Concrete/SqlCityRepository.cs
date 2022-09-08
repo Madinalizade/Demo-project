@@ -37,6 +37,7 @@ namespace Data_Access.Concrete
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@contryId", entity.CountryId);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public City Get(int id)

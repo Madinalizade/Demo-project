@@ -43,6 +43,7 @@ namespace Data_Access.Concrete
             command.Parameters.AddWithValue("adsress", entity.Address);
             command.Parameters.AddWithValue("cityId", entity.CityId);
             command.Parameters.AddWithValue("phone", entity.Phone);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public Customer Get(int id)

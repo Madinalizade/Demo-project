@@ -35,12 +35,13 @@ namespace Data_Access.Concrete
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
-            string query = "update Orders set CustomerId=@customerId,ProductId=@productId,OrderDate=@orderDate,EmployeeId=@employeeId";
+            string query = "update Orders set CustomerId=@customerId,ProductId=@productId,OrderDate=@orderDate,EmployeeId=@employeeId where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@customerId", entity.CustomerId);
             command.Parameters.AddWithValue("@productId", entity.ProductId);
             command.Parameters.AddWithValue("@orderDate", entity.OrderDate);
             command.Parameters.AddWithValue("@employeeId", entity.EmployeeId);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public Order Get(int id)

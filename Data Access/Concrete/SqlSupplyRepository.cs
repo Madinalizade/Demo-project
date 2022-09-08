@@ -38,13 +38,14 @@ namespace Data_Access.Concrete
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
-            string query = "update Supplies set Name=@name,Address=@address,ContactName=@contactName,Phone=@phone,CityId=@cityId";
+            string query = "update Supplies set Name=@name,Address=@address,ContactName=@contactName,Phone=@phone,CityId=@cityId where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@address", entity.Address);
             command.Parameters.AddWithValue("@contactName", entity.ContactName);
             command.Parameters.AddWithValue("@phone", entity.Phone);
             command.Parameters.AddWithValue("@cityId", entity.CityId);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public Supply Get(int id)

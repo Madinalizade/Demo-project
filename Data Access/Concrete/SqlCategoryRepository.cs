@@ -35,6 +35,7 @@ namespace Data_Access.Concrete
             string query = "update Category set Name=@name where Id=@id ";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public Category Get(int id)

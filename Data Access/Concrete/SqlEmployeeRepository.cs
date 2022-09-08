@@ -34,11 +34,12 @@ namespace Data_Access.Concrete
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
-            string query = "update Employees set FirstName=@firstName,LastName=@lastName,PhoneNumber=@phoneNumber";
+            string query = "update Employees set FirstName=@firstName,LastName=@lastName,PhoneNumber=@phoneNumber where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@firstName", entity.FirstName);
             command.Parameters.AddWithValue("@lastName", entity.LastName);
             command.Parameters.AddWithValue("@phoneNumber", entity.PhoneNumber);
+            command.Parameters.AddWithValue("@id", entity.Id);
             command.ExecuteNonQuery();
         }
         public Employee Get(int id)
