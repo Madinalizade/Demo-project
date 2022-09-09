@@ -1,4 +1,5 @@
-﻿using DataAccess.Abstract;
+﻿using Core.Extention;
+using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -48,14 +49,41 @@ namespace DataAccess.Concrete
         }
         public Customer Get(int id)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select *from Customer Where Id=@id";
+            using SqlCommand command= new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", id);
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return ReadCustomer(reader);
+            return null;
         }
 
         public List<Customer> GetAll()
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select *from Customers ";
+            using SqlCommand command = new SqlCommand(query, connection);
+            List<Customer> list = new List<Customer>();
+            using SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                list.Add(ReadCustomer(reader));
+            return list;
         }
-
+        private Customer ReadCustomer(SqlDataReader reader)
+        {
+            return new Customer
+            {
+                Id = reader.Get<int>("Id"),
+                CityId=reader.Get<int>("CityId"),
+                FirstName=reader.Get<string>("FirstName"),
+                LastName=reader.Get<string>("LastName"),
+                Address=reader.Get<string>("Address"),
+                Phone=reader.Get<string>("Phone")
+            };
+        }
        
     }
 }

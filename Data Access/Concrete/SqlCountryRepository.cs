@@ -1,4 +1,5 @@
-﻿using DataAccess.Abstract;
+﻿using Core.Extention;
+using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,37 @@ namespace DataAccess.Concrete
         }
         public Country Get(int id)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "select* from Country Where Id=@id";
+            using SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@id", id);
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return ReadCountry(reader);
+            return null;
         }
 
         public List<Country> GetAll()
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string query = "Select*from Countries";
+            using SqlCommand command = new SqlCommand(query, connection);
+            List<Country> list = new List<Country>();
+            using SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                list.Add(ReadCountry(reader));
+            return list;
         }
 
-       
+       private Country ReadCountry(SqlDataReader reader)
+        {
+            return new Country
+            {
+                Id = reader.Get<int>("Id"),
+                Name=reader.Get<string>("Name")
+            };
+        }
     }
 }
