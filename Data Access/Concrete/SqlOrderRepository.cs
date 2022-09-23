@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlOrderRepository : BaseRepository, IOrderRepository
     {
-        public void Add(Order entity)
+        public bool Add(Order entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -20,18 +20,21 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@productId", entity.ProductId);
             command.Parameters.AddWithValue("@orderDate", entity.OrderDate);
             command.Parameters.AddWithValue("@employeeId", entity.EmployeeId);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "Delete from Orders where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Order entity)
+        public bool Update(Order entity)
         {
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
@@ -43,7 +46,8 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@orderDate", entity.OrderDate);
             command.Parameters.AddWithValue("@employeeId", entity.EmployeeId);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Order Get(int id)
         {

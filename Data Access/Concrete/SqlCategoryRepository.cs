@@ -8,17 +8,18 @@ namespace DataAccess.Concrete
 {
     public class SqlCategoryRepository : BaseRepository, ICategoryRepository
     {
-        public void Add(Category entity)
+        public bool Add(Category entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "insert into Category(Name) values(@name)";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
@@ -26,9 +27,10 @@ namespace DataAccess.Concrete
             string query = "delete from Category where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Category entity)
+        public bool Update(Category entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -36,7 +38,8 @@ namespace DataAccess.Concrete
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Category Get(int id)
         {

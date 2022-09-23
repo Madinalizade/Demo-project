@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlCityRepository : BaseRepository, ICityRepository
     {
-        public void Add(City entity)
+        public bool Add(City entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -18,19 +18,21 @@ namespace DataAccess.Concrete
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@countryId", entity.CountryId);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "delete from Cities where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(City entity)
+        public bool Update(City entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -39,7 +41,8 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@contryId", entity.CountryId);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public City Get(int id)
         {

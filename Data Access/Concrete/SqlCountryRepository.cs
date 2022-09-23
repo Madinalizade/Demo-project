@@ -9,26 +9,28 @@ namespace DataAccess.Concrete
 {
     public class SqlCountryRepository : BaseRepository, ICountryRepository
     {
-        public void Add(Country entity)
+        public bool Add(Country entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "insert into Countries(name) value(@name) ";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "Delete from Countries where Id=@id ";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Country entity)
+        public bool Update(Country entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -36,7 +38,8 @@ namespace DataAccess.Concrete
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", entity.Name);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Country Get(int id)
         {

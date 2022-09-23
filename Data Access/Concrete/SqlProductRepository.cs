@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlProductRepository : BaseRepository,IProductRepository
     {
-        public void Add(Product entity)
+        public bool Add(Product entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -23,17 +23,19 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("unitOnOrder", entity.UnitOnOrder);
             command.Parameters.AddWithValue("@categoryId", entity.CategoryId);
             command.Parameters.AddWithValue("@suppliesId", entity.SuppliesId);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "Delete from Products where Id=@id";
             using SqlCommand command = new SqlCommand(query,connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
         public Product Get(int id)

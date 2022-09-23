@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlCustomerRepository : BaseRepository, ICustomerRepository
     {
-        public void Add(Customer entity)
+        public bool Add(Customer entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -21,19 +21,21 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@address", entity.Address);
             command.Parameters.AddWithValue("cityId", entity.CityId);
             command.Parameters.AddWithValue("phone", entity.Phone);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "Delete from Customers where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Customer entity)
+        public bool Update(Customer entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -45,7 +47,8 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("cityId", entity.CityId);
             command.Parameters.AddWithValue("phone", entity.Phone);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Customer Get(int id)
         {

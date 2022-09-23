@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlSupplyRepository : BaseRepository, ISupplyRepository
     {
-        public void Add(Supply entity)
+        public bool Add(Supply entity)
         {
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
@@ -22,19 +22,21 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@ContactName", entity.ContactName);
             command.Parameters.AddWithValue("@phone", entity.Phone);
             command.Parameters.AddWithValue("@cityId", entity.CityId);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "delete from Supplies where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id",id);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Supply entity)
+        public bool Update(Supply entity)
         {
 
             using SqlConnection connection = new SqlConnection(ConnectionString);
@@ -47,7 +49,8 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@phone", entity.Phone);
             command.Parameters.AddWithValue("@cityId", entity.CityId);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows=command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Supply Get(int id)
         {

@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class SqlEmployeeRepository : BaseRepository, IEmployeeRepository
     {
-        public void Add(Employee entity)
+        public bool Add(Employee entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -19,19 +19,21 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@firstName", entity.FirstName);
             command.Parameters.AddWithValue("@lastName", entity.LastName);
             command.Parameters.AddWithValue("@phoneNumber", entity.PhoneNumber);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
             string query = "Delete from Employees where Id=@id";
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", id);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
-        public void Update(Employee entity)
+        public bool Update(Employee entity)
         {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -41,7 +43,8 @@ namespace DataAccess.Concrete
             command.Parameters.AddWithValue("@lastName", entity.LastName);
             command.Parameters.AddWithValue("@phoneNumber", entity.PhoneNumber);
             command.Parameters.AddWithValue("@id", entity.Id);
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            return rows == 1;
         }
         public Employee Get(int id)
         {
@@ -64,21 +67,21 @@ namespace DataAccess.Concrete
             using SqlCommand command = new SqlCommand(query, connection);
             using SqlDataReader reader = command.ExecuteReader();
             List<Employee> list = new List<Employee>();
-            while (reader.Read()) 
-               list.Add(ReadEmployee(reader));
+            while (reader.Read())
+                list.Add(ReadEmployee(reader));
             return list;
-           
+
         }
         private Employee ReadEmployee(SqlDataReader reader)
         {
             return new Employee
             {
                 FirstName = reader.Get<string>("FirstName"),
-                LastName=reader.Get<string>("LastName"),
-                 PhoneNumber=reader.Get<string>("PhoneNumber"),
-                 Id=reader.Get<int>("Id")
+                LastName = reader.Get<string>("LastName"),
+                PhoneNumber = reader.Get<string>("PhoneNumber"),
+                Id = reader.Get<int>("Id")
             };
         }
-        
+
     }
 }
